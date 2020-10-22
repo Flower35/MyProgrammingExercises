@@ -1,0 +1,15 @@
+{
+    "files.exclude": {
+        "**/*.com": true,
+        "**/*.COM": true,
+        "**/*.exe": true,
+        "**/*.EXE": true,
+        "**/*.tr": true,
+        "**/*.TR": true,
+        "**/*.txt": true,
+        "**/*.TXT": true,
+    },
+
+    "personal.fasmg": "D:/Program Files/FASMG",
+    "personal.include": "${config:personal.fasmg}/packages/utility;${config:personal.fasmg}/packages/x86/include;",
+}

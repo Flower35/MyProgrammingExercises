@@ -1,0 +1,29 @@
+{
+    "tasks": [
+        {
+            "label": "g++ :: Build active file",
+            "type": "shell",
+            "command": "g++",
+            "windows": {
+                "command": "g++.exe"
+            },
+            "args": [
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "C:/MinGW/bin"
+            },
+            "presentation": {
+                "clear": true
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ],
+    "version": "2.0.0"
+}

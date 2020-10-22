@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "flat assembler g :: Build",
+            "type": "shell",
+            "command": "fasmg",
+            "windows": {
+                "command": "fasmg.exe"
+            },
+            "args": [
+                "${file}"
+            ],
+            "options": {
+                "env": {
+                    "PATH": "${config:personal.fasmg}/core",
+                    "INCLUDE": "${config:personal.include}"
+                }
+            },
+            "presentation": {
+                "clear": true
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
