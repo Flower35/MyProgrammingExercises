@@ -3,38 +3,30 @@
 ;; Functions required for this module
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-include 'out_u16.inc'
+include 'out_h8.inc'
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Common function for single-segment executables.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; DZIA£ANIE:
-;;  * Wyœwietlenie 16-bitowej liczby ca³kowitej w formacie dziesiêtnym.
+;;  * Wyœwietlenie 16-bitowej liczby w formacie heksadecymalnym.
 ;; INPUT:
-;;  * reg AX => INT16 (liczba "ze znakiem").
+;;  * reg AX => liczba do wyœwietlenia na ekranie konsoli.
 ;; KONWENCJA:
-;;  * patrz: "OUTPUT_UINT16"
+;;  * patrz: OUTPUT_HEX8.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-OUTPUT_INT16:
+OUTPUT_HEX16:
 
-    test ax,ax
-      jns .nieujemna
+    push ax
 
-    mov cx,ax
+    mov al,ah
+    call OUTPUT_HEX8
 
-    mov dl,'-'
-    mov ah,0x02
-    int 0x21
+    pop ax
+    call OUTPUT_HEX8
 
-    mov ax,cx
-
-    neg ax
-
-  .nieujemna:
-
-    call OUTPUT_UINT16
     ret
 
 

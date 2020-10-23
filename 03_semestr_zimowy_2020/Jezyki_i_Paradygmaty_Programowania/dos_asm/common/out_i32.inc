@@ -3,25 +3,27 @@
 ;; Functions required for this module
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-include 'out_u16.inc'
+include 'out_u32.inc'
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Common function for single-segment executables.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; DZIA£ANIE:
-;;  * Wyœwietlenie 16-bitowej liczby ca³kowitej w formacie dziesiêtnym.
+;;  * Wyœwietlenie 32-bitowej liczby ca³kowitej w formacie dziesiêtnym.
 ;; INPUT:
-;;  * reg AX => INT16 (liczba "ze znakiem").
+;;  * regs DX:AX => INT32 (liczba "ze znakiem").
 ;; KONWENCJA:
-;;  * patrz: "OUTPUT_UINT16"
+;;  * patrz: "OUTPUT_UINT32"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-OUTPUT_INT16:
+OUTPUT_INT32:
 
-    test ax,ax
+    test dx,dx
       jns .nieujemna
 
+    push bx
+    mov bx,dx
     mov cx,ax
 
     mov dl,'-'
@@ -29,12 +31,18 @@ OUTPUT_INT16:
     int 0x21
 
     mov ax,cx
+    mov dx,bx
+    pop bx
 
-    neg ax
+    not dx
+    not ax
+
+    add ax,0x0001
+    adc dx,0x0000
 
   .nieujemna:
 
-    call OUTPUT_UINT16
+    call OUTPUT_UINT32
     ret
 
 
