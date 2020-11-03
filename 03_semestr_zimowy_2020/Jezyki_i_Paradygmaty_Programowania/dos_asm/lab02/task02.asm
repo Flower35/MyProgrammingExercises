@@ -60,24 +60,14 @@ ILOCZYN_I_SUMA:
 
     xor dx,dx
     mov ax,word[bp + 0x04]
-    test ax,ax
-      jns .wez_drugi_skladnik
-
-    dec dx
-
-  .wez_drugi_skladnik:
+    cwd
 
     mov word[bp - 0x02],dx
     mov word[bp - 0x04],ax
 
     xor dx,dx
     mov ax,word[bp + 0x06]
-    test ax,ax
-      jns .dodaj_skladniki
-
-    dec dx
-
-  .dodaj_skladniki:
+    cwd
 
     add ax,word[bp - 0x04]
     adc dx,word[bp - 0x02]
@@ -92,12 +82,7 @@ ILOCZYN_I_SUMA:
 
     xor dx,dx
     mov ax,word[bp + 0x04]
-    test ax,ax
-      jns .pomnoz_czynniki
-
-    dec dx
-
-  .pomnoz_czynniki:
+    cwd
 
     mov cx,word[bp + 0x06]
     imul cx

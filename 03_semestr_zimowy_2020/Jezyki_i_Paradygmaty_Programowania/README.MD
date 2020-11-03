@@ -23,5 +23,5 @@
    * `"TASK02"`
  * **Zadanie 5.** Funkcję, która zamienia miejscami wartości swoich dwóch argumentów. Argumenty funkcji przekazywane są przy użyciu wskaźników albo referencji. Należy przygotować odpowiednie testy dla zaproponowanego rozwiązania.
    * `"TASK03"`
- * **Zadanie 5.** Efektywne przeciążenie funkcji „`std::swap()`” tak, że zamiana dwóch obiektów odbywa się bez kopiowania jednego obiektu do zmiennej tymczasowej i bez dwukrotnego wywoływania operatora przypisania.
+ * **Zadanie 6.** Efektywne przeciążenie funkcji „`std::swap()`” tak, że zamiana dwóch obiektów odbywa się bez kopiowania jednego obiektu do zmiennej tymczasowej i bez dwukrotnego wywoływania operatora przypisania.
    * `"TASK03"`

@@ -32,6 +32,7 @@ org 0x0100
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ROZMIAR_POTEZNEGO_OBIEKTU EQU (8 * 1024 - 1)
+TYPOWY_ROZMIAR_STOSU EQU 256
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -446,6 +447,8 @@ testowy_obiekt_C: rb ROZMIAR_POTEZNEGO_OBIEKTU
 
 align 0x02
 testowy_obiekt_D: rb ROZMIAR_POTEZNEGO_OBIEKTU
+
+assert ($ <= (0xFFFF + 0x01 - TYPOWY_ROZMIAR_STOSU))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
