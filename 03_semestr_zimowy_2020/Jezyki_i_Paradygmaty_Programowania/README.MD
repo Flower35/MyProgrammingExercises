@@ -25,3 +25,7 @@
    * `"TASK03"`
  * **Zadanie 6.** Efektywne przeciążenie funkcji „`std::swap()`” tak, że zamiana dwóch obiektów odbywa się bez kopiowania jednego obiektu do zmiennej tymczasowej i bez dwukrotnego wywoływania operatora przypisania.
    * `"TASK03"`
+
+## Laboratorium 3 (2020-11-03)
+ * **Zadanie 1.** Należy zaimplementować klasę reprezentującą macierz elementów `double`. Klasa ma mieć następujące metody: trzy konstruktory (macierz dwuwymiarowa, macierz kwadratowa, macierz odczytywana z pliku tekstowego); odczytywanie i zapisywanie określonego elementu macierzy; dodawanie; odejmowanie; mnożenie; pobieranie liczby wierszy i liczby kolumn; wyświetlanie macierzy w konsoli; zapisywanie macierzy do pliku tekstowego.
+   * `"MATRIX"`
