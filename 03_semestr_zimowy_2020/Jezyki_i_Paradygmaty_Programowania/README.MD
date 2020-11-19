@@ -29,3 +29,7 @@
 ## Laboratorium 3 (2020-11-03)
  * **Zadanie 1.** Należy zaimplementować klasę reprezentującą macierz elementów `double`. Klasa ma mieć następujące metody: trzy konstruktory (macierz dwuwymiarowa, macierz kwadratowa, macierz odczytywana z pliku tekstowego); odczytywanie i zapisywanie określonego elementu macierzy; dodawanie; odejmowanie; mnożenie; pobieranie liczby wierszy i liczby kolumn; wyświetlanie macierzy w konsoli; zapisywanie macierzy do pliku tekstowego.
    * `"MATRIX"`
+
+## Laboratorium 4 (2020-11-10)
+ * **Zadanie 1.** Program z `"lab03/matrix"` w formie projektu `"CMake"`.
+   * `"lab04/Build/"`
