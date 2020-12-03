@@ -33,3 +33,7 @@
 ## Laboratorium 4 (2020-11-10)
  * **Zadanie 1.** Program z `"lab03/matrix"` w formie projektu `"CMake"`.
    * `"lab04/Build/"`
+
+## Laboratorium 3b (2020-11-23)
+ * **Zadanie dodatkowe.** Zamiast zapisywania macierzy do pliku tekstowego, wykorzystaj bibliotekę `"SQLite"`.
+   * `"lab03b/Build/"`
