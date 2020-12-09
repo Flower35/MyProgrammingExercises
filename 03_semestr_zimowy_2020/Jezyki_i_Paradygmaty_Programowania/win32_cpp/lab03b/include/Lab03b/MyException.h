@@ -9,7 +9,7 @@ namespace Lab03b
     ////////////////////////////////////////////////////////////////
     // Klasa wyj¹tku
     ////////////////////////////////////////////////////////////////
-    class MyException
+    class MyException : public std::exception
     {
         /* Properties */
 
@@ -23,7 +23,7 @@ namespace Lab03b
 
             MyException(const char* format, ...);
 
-            void printMessage() const;
+            const char* what() const noexcept override;
     };
 
 }

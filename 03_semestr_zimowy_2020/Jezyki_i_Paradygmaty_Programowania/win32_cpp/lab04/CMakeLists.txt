@@ -38,3 +38,12 @@ add_executable (
     ./src/Lab04/MyException.cpp
     ./src/Lab04/Matrix.cpp
 )
+
+
+# Wymuszenie kompilacji programu 32-bitowego
+set_target_properties (
+
+    Lab04 PROPERTIES
+    COMPILE_FLAGS "-m32"
+    LINK_FLAGS "-m32"
+)

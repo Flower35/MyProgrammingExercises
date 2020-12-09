@@ -33,6 +33,15 @@ add_executable (
 )
 
 
+# Wymuszenie kompilacji programu 32-bitowego
+set_target_properties (
+
+    Lab03b PROPERTIES
+    COMPILE_FLAGS "-m32"
+    LINK_FLAGS "-m32"
+)
+
+
 # Biblioteki dynamiczne (".lib" -> ".dll")
 target_link_libraries (
 

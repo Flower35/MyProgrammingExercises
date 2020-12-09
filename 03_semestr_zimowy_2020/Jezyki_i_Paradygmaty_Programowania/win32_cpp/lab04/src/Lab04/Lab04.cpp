@@ -151,10 +151,11 @@ namespace Lab04
 
             a = 0;
         }
-        catch (MyException &error)
+        catch (std::exception &error)
         {
             print_dashed_line();
-            error.printMessage();
+
+            std::cout << error.what() << std::endl;
 
             a = 1;
         }

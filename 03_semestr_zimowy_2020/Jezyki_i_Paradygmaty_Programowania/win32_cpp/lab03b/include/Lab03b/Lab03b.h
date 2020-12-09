@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include <new>
+#include <exception>
 
 #include <cinttypes>
 #include <cstring>

@@ -18,17 +18,24 @@
 
 ****************************************************************/
 
+////////////////////////////////////////////////////////////////
+// Biblioteki jêzyka C++
+////////////////////////////////////////////////////////////////
+
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <new>
+#include <exception>
+
 #include <cstdarg>
 
 
 ////////////////////////////////////////////////////////////////
 // Definicje
 ////////////////////////////////////////////////////////////////
+
 #define LARGE_BUFFER_SIZE 256
 #define NAZWA_PLIKU "matrix.txt"
 
@@ -50,7 +57,7 @@ void print_dashed_line()
 ////////////////////////////////////////////////////////////////
 // Klasa wyj¹tku
 ////////////////////////////////////////////////////////////////
-class MyException
+class MyException : public std::exception
 {
     /* Properties */
 
@@ -65,19 +72,18 @@ class MyException
         MyException(const char* format, ...)
         {
             char test[LARGE_BUFFER_SIZE];
+            std::va_list args;
 
-            va_list args;
             va_start(args, format);
-
-            vsprintf(test, format, args);
-            message = test;
-
+            std::vsprintf(test, format, args);
             va_end(args);
+
+            message = std::string("[MY EXCEPTION - MOJ WYJATEK] ") + test;
         }
 
-        void printMessage() const
+        const char* what() const noexcept override
         {
-            std::cout << "[EXCEPTION] " << message << std::endl;
+            return message.c_str();
         }
 };
 
@@ -623,10 +629,11 @@ int main()
 
         a = 0;
     }
-    catch (MyException &error)
+    catch (std::exception &error)
     {
         print_dashed_line();
-        error.printMessage();
+
+        std::cout << error.what() << std::endl;
 
         a = 1;
     }

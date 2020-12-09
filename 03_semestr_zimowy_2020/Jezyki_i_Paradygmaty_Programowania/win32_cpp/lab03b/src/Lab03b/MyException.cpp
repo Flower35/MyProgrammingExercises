@@ -9,23 +9,22 @@ namespace Lab03b
     MyException::MyException(const char* format, ...)
     {
         char test[LARGE_BUFFER_SIZE];
-
         std::va_list args;
+
         va_start(args, format);
-
         std::vsprintf(test, format, args);
-        message = test;
-
         va_end(args);
+
+        message = std::string("[MY EXCEPTION - MOJ WYJATEK] ") + test;
     }
 
 
     ////////////////////////////////////////////////////////////////
-    // [MyException] Wypisywanie wiadomoœci na ekranie konsoli.
+    // [MyException] Zwrócenie wiadomoœci poprzez funkcjê przes³oniêt¹.
     ////////////////////////////////////////////////////////////////
-    void MyException::printMessage() const
+    const char* MyException::what() const noexcept
     {
-        std::cout << "[EXCEPTION] " << message << std::endl;
+        return message.c_str();
     }
 
 }
