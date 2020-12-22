@@ -37,3 +37,7 @@
 ## Laboratorium 3b (2020-11-23)
  * **Zadanie dodatkowe.** Zamiast zapisywania macierzy do pliku tekstowego, wykorzystaj bibliotekę `"SQLite"`.
    * `"lab03b/Build/"`
+
+## Laboratorium 5 (2020-12-22)
+ * **Zadanie 1.** Program z `"lab03/matrix"` wykorzystujący przeciążenia operatorów: `+`, `-`, `*`, `==`, `[]`.
+   * `"lab05/Build/"`
