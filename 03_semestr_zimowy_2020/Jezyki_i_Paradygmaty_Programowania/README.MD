@@ -41,3 +41,7 @@
 ## Laboratorium 5 (2020-12-22)
  * **Zadanie 1.** Program z `"lab03/matrix"` wykorzystujący przeciążenia operatorów: `+`, `-`, `*`, `==`, `[]`.
    * `"lab05/Build/"`
+
+## Laboratorium 6 (2020-12-22)
+ * **Zadanie.** Implementacja systemu dla działu „Human Resources” w firmie. Klasa `"HRMS"` ma zawierać: kontener z pracownikami; kontener mapujący identyfikatory departamentów na identyfikatory pracowników; metodę dodawania pracownika; metodę wybrania pracowników z jednego departmentu; metodę sortowania pracowników malejąco według ich zarobków. Należy zademonstrować działanie kodu dla co najmniej dziesięciu pracowników pracujących w co najmniej trzech departamentach.
+   * `"lab06/Build/"`
