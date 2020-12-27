@@ -347,6 +347,38 @@ namespace Lab06
 
 
     ////////////////////////////////////////////////////////////////
+    // [HRMS] Wybieranie pracowników, których identyfikatory
+    // mieszcz¹ siê w wybranym przedziale.
+    // Argument Zero ignoruje dan¹ granicê przedzia³u.
+    ////////////////////////////////////////////////////////////////
+    // Funkcja zwraca listê identyfikatorów, która mo¿e byæ pusta.
+    ////////////////////////////////////////////////////////////////
+    std::list<uint32_t> HRMS::findEmployeesById(uint32_t min_id, uint32_t max_id) const
+    {
+        std::list<uint32_t> result;
+        std::map<uint32_t, Employee>::const_iterator it;
+
+        for (it = _employees.begin(); _employees.end() != it; it++)
+        {
+            if ((0 != min_id) && (it->first < min_id))
+            {
+                /* Nie klasyfikuje siê! */
+            }
+            else if ((0 != max_id) && (it->first > max_id))
+            {
+                /* Nie klasyfikuje siê! */
+            }
+            else
+            {
+                result.push_back(it->first);
+            }
+        }
+
+        return result;
+    }
+
+
+    ////////////////////////////////////////////////////////////////
     // [HRMS] Wybieranie pracowników z danego departamentu.
     ////////////////////////////////////////////////////////////////
     // Funkcja zwraca listê identyfikatorów, która mo¿e byæ pusta.
@@ -384,9 +416,8 @@ namespace Lab06
 
     ////////////////////////////////////////////////////////////////
     // [HRMS] Wybieranie pracowników, których pensja
-    // mieœcie siê w wybranych przedzia³ach.
-    ////////////////////////////////////////////////////////////////
-    // Argument Zero ignoruje dany przedzia³.
+    // mieœci siê w wybranym przedziale.
+    // Argument Zero ignoruje dan¹ granicê przedzia³u.
     ////////////////////////////////////////////////////////////////
     // Funkcja zwraca listê identyfikatorów, która mo¿e byæ pusta.
     ////////////////////////////////////////////////////////////////

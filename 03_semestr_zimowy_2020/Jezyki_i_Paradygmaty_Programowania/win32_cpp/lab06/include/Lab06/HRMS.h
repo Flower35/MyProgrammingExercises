@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 #include <list>
+#include <fstream>
 
 #include <Lab06/Employee.h>
 #include <Lab06/IndexedText.h>
@@ -11,7 +12,7 @@
 namespace Lab06
 {
     ////////////////////////////////////////////////////////////////
-    // Definicje pomocznicze.
+    // Definicje pomocnicze.
     ////////////////////////////////////////////////////////////////
 
     typedef bool (*HrmsEmployeeComparator)(const Employee * &, const Employee * &);
@@ -74,6 +75,14 @@ namespace Lab06
             std::list<uint32_t> getAllPositionIds() const;
 
         /********************************/
+        /*** Metody : Serializacja ***/
+
+        public:
+
+            void saveToFile(const std::string & file_path) const;
+            void loadFromFile(const std::string & file_path);
+
+        /********************************/
         /*** Metody : Pracownicy ***/
 
         public:
@@ -99,6 +108,7 @@ namespace Lab06
             std::list<uint32_t> findEmployeesByName(const std::string & name) const;
             std::list<uint32_t> findEmployeesBySurname(const std::string & surname) const;
 
+            std::list<uint32_t> findEmployeesById(uint32_t min_id, uint32_t max_id) const;
             std::list<uint32_t> findEmployeesByDepartment(uint32_t department_id) const;
             std::list<uint32_t> findEmployeesByPosition(uint32_t position_id) const;
             std::list<uint32_t> findEmployeesBySalary(double min_salary, double max_salary) const;
@@ -116,6 +126,7 @@ namespace Lab06
 
             void changeDepartmentName(uint32_t department_id, const std::string & name);
 
+            std::list<uint32_t> findDepartmentsById(uint32_t min_id, uint32_t max_id) const;
             std::list<uint32_t> findDepartmentsContainingName(const std::string & name) const;
 
         /********************************/
@@ -131,6 +142,7 @@ namespace Lab06
 
             void changePositionName(uint32_t position_id, const std::string & name);
 
+            std::list<uint32_t> findPositionsById(uint32_t min_id, uint32_t max_id) const;
             std::list<uint32_t> findPositionsContainingName(const std::string & name) const;
 
         /********************************/

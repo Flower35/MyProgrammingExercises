@@ -179,6 +179,38 @@ namespace Lab06
 
 
     ////////////////////////////////////////////////////////////////
+    // [HRMS] Wybieranie departamentów, których identyfikatory
+    // mieszcz¹ siê w wybranym przedziale.
+    // Argument Zero ignoruje dan¹ granicê przedzia³u.
+    ////////////////////////////////////////////////////////////////
+    // Funkcja zwraca listê identyfikatorów, która mo¿e byæ pusta.
+    ////////////////////////////////////////////////////////////////
+    std::list<uint32_t> HRMS::findDepartmentsById(uint32_t min_id, uint32_t max_id) const
+    {
+        std::list<uint32_t> result;
+        std::map<uint32_t, IndexedText>::const_iterator it;
+
+        for (it = _departments.begin(); _departments.end() != it; it++)
+        {
+            if ((0 != min_id) && (it->first < min_id))
+            {
+                /* Nie klasyfikuje siê! */
+            }
+            else if ((0 != max_id) && (it->first > max_id))
+            {
+                /* Nie klasyfikuje siê! */
+            }
+            else
+            {
+                result.push_back(it->first);
+            }
+        }
+
+        return result;
+    }
+
+
+    ////////////////////////////////////////////////////////////////
     // [HRMS] Wyszukiwanie departamentów po czêœciowych nazwach.
     ////////////////////////////////////////////////////////////////
     // Funkcja zwraca listê identyfikatorów, która mo¿e byæ pusta.
@@ -365,6 +397,38 @@ namespace Lab06
         IndexedText & dummy = getPosition(position_id);
 
         dummy._text = name;
+    }
+
+
+    ////////////////////////////////////////////////////////////////
+    // [HRMS] Wybieranie stanowisk, których identyfikatory
+    // mieszcz¹ siê w wybranym przedziale.
+    // Argument Zero ignoruje dan¹ granicê przedzia³u.
+    ////////////////////////////////////////////////////////////////
+    // Funkcja zwraca listê identyfikatorów, która mo¿e byæ pusta.
+    ////////////////////////////////////////////////////////////////
+    std::list<uint32_t> HRMS::findPositionsById(uint32_t min_id, uint32_t max_id) const
+    {
+        std::list<uint32_t> result;
+        std::map<uint32_t, IndexedText>::const_iterator it;
+
+        for (it = _positions.begin(); _positions.end() != it; it++)
+        {
+            if ((0 != min_id) && (it->first < min_id))
+            {
+                /* Nie klasyfikuje siê! */
+            }
+            else if ((0 != max_id) && (it->first > max_id))
+            {
+                /* Nie klasyfikuje siê! */
+            }
+            else
+            {
+                result.push_back(it->first);
+            }
+        }
+
+        return result;
     }
 
 

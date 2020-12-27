@@ -11,6 +11,7 @@
 
 #include <string>
 #include <utility>
+#include <list>
 #include <iostream>
 
 
@@ -36,9 +37,13 @@ namespace Lab06
 
     bool compareStringsLowercase(const std::string & s1, const std::string & s2);
 
+    int32_t findStringInArray(const std::string & s, const std::list<std::string> & v);
+
     bool stringContainsLowercase(const std::string & s1, const std::string & s2);
 
     bool sortStringsLowercaseAscending(const std::string & s1, const std::string & s2);
+
+    std::list<std::string> splitStringsBySpaces(const std::string & source, const char space);
 
 }
 

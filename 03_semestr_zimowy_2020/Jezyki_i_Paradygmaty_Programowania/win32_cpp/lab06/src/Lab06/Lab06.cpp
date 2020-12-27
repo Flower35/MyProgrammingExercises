@@ -1,8 +1,41 @@
-////////////////////////////////////////////////////////////////
-// Laboratorium 06.
-////////////////////////////////////////////////////////////////
+/****************************************************************
+  [LAB 06]
+    Implementacja systemu dla dzia³u „Human Resources” w firmie.
+    Klasa "HRMS" ma zawieraæ:
+
+  * kontener w którym bêd¹ przechowywani wszyscy pracownicy
+
+  * kontener w którym bêdzie przechowywane mapowanie pomiêdzy
+   identyfikatorami departamentów a identyfikatorami wszystkich
+   pracowników danego departamentu
+
+  * kontener przechowywuj¹cy informacje o zarobkach pracowników
+
+  * metoda `add(Employee employee, std::string departmentId, double salary)`
+   dodaj¹ca u¿ytkownika do systemu, do danego departamentu,
+   maj¹cego dane wynagrodzenie
+
+  * metoda `printDepartment(std::string departmentId)` wypisuj¹ca
+   wszystkich pracowników danego departamentu
+
+  * metoda `changeSalary(std::string employeeId, double salary)`
+   zmieniaj¹ca wynagrodzenie danego pracownika
+
+  * metoda `printSalaries()` wypisuj¹ca wynagrodzenia
+   wszystkich pracowników, wraz z informacjami o tych pracownikach
+
+  * metoda `printSalariesSorted()` wypisuj¹ca wynagrodzenia
+   wszystkich pracowników, wraz z informacjami o tych pracownikach,
+   w kolejnoœci malej¹cego wynagrodzenia
+
+    Nale¿y zaimplementowaæ metodê `main()` demonstruj¹c¹ dzia³anie
+    powy¿szego kodu dla co najmniej 10 pracowników pracuj¹cych
+    w co najmniej 3 departamentach.
+
+****************************************************************/
 
 #include <Lab06/Lab06.h>
+
 
 namespace Lab06
 {
@@ -46,6 +79,31 @@ namespace Lab06
         }
 
         return true;
+    }
+
+
+    ////////////////////////////////////////////////////////////////
+    // [funkcja pomocnicza]
+    // Sprawdzenie czy wybrany napis znajduje siê
+    // w tablicy i zwrócenie odpowiedniego indeksu.
+    // Funkcja zwraca (-1) w przypadku niedopasowania.
+    ////////////////////////////////////////////////////////////////
+    int32_t findStringInArray(const std::string & s, const std::list<std::string> & v)
+    {
+        size_t a = 0;
+        std::list<std::string>::const_iterator it;
+
+        for (it = v.begin(); v.end() != it; it++)
+        {
+            if (compareStringsLowercase(s, (*it)))
+            {
+                return a;
+            }
+
+            a++;
+        }
+
+        return (-1);
     }
 
 
@@ -125,514 +183,52 @@ namespace Lab06
         return (len1 < len2);
     }
 
-}
 
-
-////////////////////////////////////////////////////////////////
-// Testowanie aplikacji
-////////////////////////////////////////////////////////////////
-
-#include <Lab06/HRMS.h>
-
-#include <vector>
-
-const uint32_t NUM_DEPARTMENTS =  5;
-const uint32_t NUM_POSITIONS   =  7;
-
-const char * RANDOM_NAMES[NUM_DEPARTMENTS] =
-{
-    "lorem",
-    "ipsum",
-    "dolor",
-    "sit",
-    "amet"
-};
-
-const char * DEPARTMENT_NAMES[NUM_DEPARTMENTS] =
-{
-    "General Management",
-    "Marketing",
-    "Operations",
-    "Finance",
-    "Human Resource"
-};
-
-const char * POSITION_NAMES[NUM_POSITIONS] =
-{
-    "Administrator",
-    "Gaming Director",
-
-    "Advertising Executive",
-
-    "Radio Station Manager",
-    "General Superintendent",
-
-    "Credit Manager",
-
-    "Programmer"
-};
-
-int32_t main()
-{
-    try
+    ////////////////////////////////////////////////////////////////
+    // [funkcja pomocnicza]
+    // Utworzene listy s³ów kluczowych rozdzielonych wybranym znakiem.
+    ////////////////////////////////////////////////////////////////
+    std::list<std::string> splitStringsBySpaces(const std::string & source, const char space)
     {
-        Lab06::HRMS test_system;
+        std::list<std::string> result;
+        size_t word_start = 0;
+        size_t source_end = source.length();
+        size_t word_end = 0;
+        char last_char = space;
+        char current_char;
 
-        std::vector<uint32_t> departments;
-        std::vector<uint32_t> positions;
-        std::vector<uint32_t> employees;
-
-        std::list<uint32_t> indices;
-
-        size_t a, b;
-        double c;
-
-        /********************************/
-        /* Tworzenie departamentów z "przerwami w identyfikatorach" */
-
-        for (a = 0; a < NUM_DEPARTMENTS; a++)
+        while (word_end < source_end)
         {
-            test_system.removeDepartment
-            (
-                test_system.addDepartment(RANDOM_NAMES[a])
-            );
+            current_char = source.at(word_end);
 
-            departments.push_back
-            (
-                test_system.addDepartment(DEPARTMENT_NAMES[a])
-            );
-        }
-
-        /********************************/
-
-        Lab06::printDashedLine();
-
-        std::cout << " * Utworzono departamenty:" << std::endl;
-
-        Lab06::printDashedLine();
-
-        test_system.printAllDepartments();
-
-        Lab06::printDashedLine();
-
-        /********************************/
-        /* Tworzenie stanowisk z "przerwami w identyfikatorach" */
-
-        for (a = 0; a < NUM_POSITIONS; a++)
-        {
-            for (b = 0; b < 3; b++)
+            if (space == last_char)
             {
-                test_system.removePosition
+                if (space != current_char)
+                {
+                    word_start = word_end;
+                }
+            }
+            else if (space == current_char)
+            {
+                result.push_back
                 (
-                    test_system.addPosition("")
+                    source.substr(word_start, word_end - word_start)
                 );
             }
 
-            positions.push_back
+            last_char = current_char;
+            word_end++;
+        }
+
+        if (' ' != last_char)
+        {
+            result.push_back
             (
-                test_system.addPosition(POSITION_NAMES[a])
+                source.substr(word_start, source_end - word_start)
             );
         }
 
-        /********************************/
-
-        Lab06::printDashedLine();
-
-        std::cout << " * Utworzono stanowiska:" << std::endl;
-
-        Lab06::printDashedLine();
-
-        test_system.printAllPositions();
-
-        Lab06::printDashedLine();
-
-        /********************************/
-        /* Dodawanie pracowników:     */
-        /* Testowanie funkcji `add()` */
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Adam",
-                "Mickiewicz",
-                departments[0],
-                positions[0],
-                100.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Fryderyk",
-                "Chopin",
-                departments[0],
-                positions[1],
-                300.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Mikolaj",
-                "Rej",
-                departments[0],
-                positions[1],
-                1100.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Giuseppe",
-                "Verdi",
-                departments[1],
-                positions[2],
-                500.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Stanislaw",
-                "Lem",
-                departments[2],
-                positions[3],
-                1800.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Antonio",
-                "Vivaldi",
-                departments[2],
-                positions[3],
-                400.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Ignacy",
-                "Krasicki",
-                departments[2],
-                positions[4],
-                1200.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Ferenc",
-                "Liszt",
-                departments[2],
-                positions[4],
-                200.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Julian",
-                "Tuwim",
-                departments[3],
-                positions[5],
-                1900.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Richard",
-                "Wagner",
-                departments[3],
-                positions[5],
-                1500.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Juliusz",
-                "Slowacki",
-                departments[3],
-                positions[5],
-                1000.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Franz",
-                "Schubert",
-                departments[1],
-                positions[2],
-                1600.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Aleksander",
-                "Fredro",
-                departments[0],
-                positions[0],
-                2000.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Edvard",
-                "Grieg",
-                departments[0],
-                positions[0],
-                1700.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Stanislaw",
-                "Wyspianski",
-                departments[4],
-                positions[6],
-                700.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Piotr",
-                "Czajkowski",
-                departments[2],
-                positions[4],
-                1300.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Jan",
-                "Kasprowicz",
-                departments[4],
-                positions[6],
-                800.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Ludwig van",
-                "Beethoven",
-                departments[4],
-                positions[6],
-                600.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Wladyslaw",
-                "Reymont",
-                departments[2],
-                positions[3],
-                1400.0
-            )
-        );
-
-        employees.push_back
-        (
-            test_system.addEmployee
-            (
-                "Wolfgang Amadeus",
-                "Mozart",
-                departments[4],
-                positions[6],
-                900.0
-            )
-        );
-
-        /********************************/
-
-        Lab06::printDashedLine();
-
-        std::cout << " * Dodano pracownikow:" << std::endl;
-
-        Lab06::printDashedLine();
-
-        test_system.printAllEmployees();
-
-        Lab06::printDashedLine();
-
-        /********************************/
-        /* Wypisywanie pracowników z wybranych dzia³ów,   */
-        /* sortowanie listy alfabetycznie wed³ug nazwisk. */
-
-        for (a = 0; a < NUM_DEPARTMENTS; a++)
-        {
-            Lab06::printDashedLine();
-
-            std::cout
-                << " * [" << (a + 1) << "/" << NUM_DEPARTMENTS
-                << "] Pracownicy dzialu \""
-                << test_system.getDepartment(departments[a]).getText()
-                << "\" (sort po nazwiskach):" << std::endl;
-
-            Lab06::printDashedLine();
-
-            indices = test_system.findEmployeesByDepartment(departments[a]);
-            test_system.sortEmployeesListBySurname(indices);
-            test_system.printEmployees(indices);
-
-            Lab06::printDashedLine();
-        }
-
-        /********************************/
-        /* Wypisywanie pracowników z wybranych stanowisk, */
-        /* sortowanie listy malej¹co wed³ug pensi.        */
-
-        for (a = 0; a < NUM_POSITIONS; a++)
-        {
-            Lab06::printDashedLine();
-
-            std::cout
-                << " * [" << (a + 1) << "/" << NUM_POSITIONS
-                << "] Pracownicy na pozycji \""
-                << test_system.getPosition(positions[a]).getText()
-                << "\" (sort po pensjach):" << std::endl;
-
-            Lab06::printDashedLine();
-
-            indices = test_system.findEmployeesByPosition(positions[a]);
-            test_system.sortEmployeesListBySalary(indices);
-            test_system.printEmployees(indices);
-
-            Lab06::printDashedLine();
-        }
-
-        /********************************/
-        /* Testowanie funkcji `changeSalary()` i `printSalariesSorted()` */
-
-        b = employees.size();
-        c = 125.30;
-        for (a = 0; a < b; a++)
-        {
-            test_system.changeSalary(employees[a], c);
-            c += 125.30;
-        }
-
-        Lab06::printDashedLine();
-
-        std::cout
-            << " * Pracownicy po zmianach pensji:"
-            << std::endl;
-
-        Lab06::printDashedLine();
-
-        indices = test_system.getAllEmployeeIds();
-        test_system.sortEmployeesListBySalary(indices);
-        test_system.printEmployees(indices);
-
-        Lab06::printDashedLine();
-
-        /********************************/
-
-        Lab06::printDashedLine();
-
-        std::cout
-            << " * Pracownicy, ktorzy maja w nazwisku 'ow', sort po imionach:"
-            << std::endl;
-
-        Lab06::printDashedLine();
-
-        indices = test_system.findEmployeesBySurname("ow");
-        test_system.sortEmployeesListByName(indices);
-        test_system.printEmployees(indices);
-
-        Lab06::printDashedLine();
-
-        /********************************/
-
-        Lab06::printDashedLine();
-
-        std::cout
-            << " * Departamenty, ktore maja w nazwie 'an', alfabetycznie:"
-            << std::endl;
-
-        Lab06::printDashedLine();
-
-        indices = test_system.findDepartmentsContainingName("an");
-        test_system.sortDepartmentsListByName(indices);
-        test_system.printDepartments(indices);
-
-        Lab06::printDashedLine();
-
-        /********************************/
-
-        Lab06::printDashedLine();
-
-        std::cout
-            << " *Stanowiska, ktore maja w nazwie 'in', alfabetycznie:"
-            << std::endl;
-
-        Lab06::printDashedLine();
-
-        indices = test_system.findPositionsContainingName("in");
-        test_system.sortPositionsListByName(indices);
-        test_system.printPositions(indices);
-
-        Lab06::printDashedLine();
-
-        /********************************/
-    }
-    catch (std::exception &err)
-    {
-        Lab06::printDashedLine();
-
-        std::cout
-            << "[EXCEPTION!]" << std::endl
-            << "  " << err.what() << std::endl;
-
-        return EXIT_FAILURE;
+        return result;
     }
 
-    return EXIT_SUCCESS;
 }

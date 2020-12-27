@@ -117,19 +117,15 @@ namespace Lab06
         std::map<uint32_t, IndexedText>::const_iterator it;
         uint32_t i = 1;
 
-        //// printDashedLine();
-
         for (it_idx = idx_list.begin(); idx_list.end() != it_idx; it_idx++)
         {
             if (text_map.end() != (it = text_map.find(*it_idx)))
             {
                 std::cout << "  [" << i << "]";
-                it->second.print(false);
+                it->second.print(true);
                 i++;
             }
         }
-
-        //// printDashedLine();
     }
 
 
@@ -144,14 +140,10 @@ namespace Lab06
     {
         std::map<uint32_t, IndexedText>::const_iterator it;
 
-        //// printDashedLine();
-
         for (it = text_map.begin(); text_map.end() != it; it++)
         {
             it->second.print(true);
         }
-
-        //// printDashedLine();
     }
 
 
@@ -274,19 +266,15 @@ namespace Lab06
         std::map<uint32_t, Employee>::const_iterator it;
         uint32_t i = 1;
 
-        //// printDashedLine();
-
         for (it_idx = idx_list.begin(); idx_list.end() != it_idx; it_idx++)
         {
             if (_employees.end() != (it = _employees.find(*it_idx)))
             {
                 std::cout << "  [" << i << "]";
-                it->second.print(false);
+                it->second.print(true);
                 i++;
             }
         }
-
-        //// printDashedLine();
     }
 
 
@@ -297,14 +285,10 @@ namespace Lab06
     {
         std::map<uint32_t, Employee>::const_iterator it;
 
-        //// printDashedLine();
-
         for (it = _employees.begin(); _employees.end() != it; it++)
         {
             it->second.print(true);
         }
-
-        //// printDashedLine();
     }
 
 
