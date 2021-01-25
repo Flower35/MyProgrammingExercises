@@ -45,3 +45,11 @@
 ## Laboratorium 6 (2020-12-22)
  * **Zadanie.** Implementacja systemu dla działu „Human Resources” w firmie. Klasa `"HRMS"` ma zawierać: kontener z pracownikami; kontener mapujący identyfikatory departamentów na identyfikatory pracowników; metodę dodawania pracownika; metodę wybrania pracowników z jednego departmentu; metodę sortowania pracowników malejąco według ich zarobków. Należy zademonstrować działanie kodu dla co najmniej dziesięciu pracowników pracujących w co najmniej trzech departamentach.
    * `"lab06/Build/"`
+
+## Tetris (2021-01-11)
+ * **Projekt.** Popularna gra „Tetris” napisana w języku „C++” z użyciem biblioteki „GLFW”.
+   * `"tetris/Bin/"`
+
+## Laboratorium 8 (2021-01-25)
+ * **Zadanie.** Implementacja „Problemu ucztujących filozofów” z użyciem wątków („`C++11`”). Prezentacja graficzna rozwiązania z użyciem biblioteki „GLFW”.
+   * `"lab08/Bin/"`
