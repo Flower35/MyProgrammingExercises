@@ -3,7 +3,7 @@
 
 ## Dodatkowe pliki wymagane przed kompilacją programu:
  * `"./libs/GLFW/include/GLFW/glfw3.h"`
- * `"./libs/GLFW/libglfw3.a"`
+ * `"./libs/GLFW/libglfw3dll.a"`
 
 ## Dodatkowe pliki wymagane do uruchomienia programu:
  * `"./bin/glfw3.dll"`
@@ -16,3 +16,5 @@
  * https://sourceforge.net/projects/mingwbuilds/files/host-windows/releases/4.8.1/32-bit/threads-posix/sjlj/
    * Kompilator **"MinGW"** (C++) z obsługą wątków *„POSIX”*.
    * Pozwala wyeliminować błąd kompilacji: `"'thread' is not a member of 'std'"`.
+
+![Task Preview](./philosophers_preview.png?raw=true)

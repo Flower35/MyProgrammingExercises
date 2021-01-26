@@ -9,28 +9,101 @@ namespace Lab08
 {
 
     ////////////////////////////////////////////////////////////////
-    // Podstawowe definicje
+    // Struktury pomocnicze
     ////////////////////////////////////////////////////////////////
 
-    COLOR3F::COLOR3F(float _r, float _g, float _b)
+    Point2f::Point2f(float _x, float _y)
+    : x(_x), y(_y)
+    {}
+
+    Color3f::Color3f(float _r, float _g, float _b)
     : red(_r), green(_g), blue(_b)
     {}
+
+
+    ////////////////////////////////////////////////////////////////
+    // Klasa semafora zliczaj¹cego
+    ////////////////////////////////////////////////////////////////
+
+    Semaphore::Semaphore(size_t starting_value)
+    : counter(starting_value)
+    {}
+
+    Semaphore::Semaphore(const Semaphore & other)
+    : counter(other.counter)
+    {}
+
+    void Semaphore::operator () (size_t new_counter)
+    {
+        counter = new_counter;
+    }
+
+    void Semaphore::wait(int32_t opt_fork_id, int32_t new_state)
+    {
+        std::unique_lock<std::mutex> lock(mtx);
+
+        while (counter <= 0)
+        {
+            convar.wait(lock);
+        }
+
+        counter--;
+
+        if (opt_fork_id >= 0)
+        {
+            ForkState[opt_fork_id](new_state);
+        }
+
+        lock.unlock();
+    }
+
+    void Semaphore::signal(int32_t opt_fork_id)
+    {
+        mtx.lock();
+
+        counter++;
+
+        if (opt_fork_id >= 0)
+        {
+            ForkState[opt_fork_id](FORK_STATE_AVAILABLE);
+        }
+
+        mtx.unlock();
+
+        convar.notify_all();
+    }
+
+
+    ////////////////////////////////////////////////////////////////
+    // Klasa stanu obiektu wizualnego
+    ////////////////////////////////////////////////////////////////
+
+    VisualState::VisualState()
+    : state(0)
+    {}
+
+    uint8_t VisualState::operator () (void) const
+    {
+        /* Wywo³anie obiektu bez parametru: "GET" */
+        return state;
+    }
+
+    void VisualState::operator () (uint8_t new_state)
+    {
+        /* Wywo³anie obiektu z parametrem: "SET" */
+        state = new_state;
+    }
 
 
     ////////////////////////////////////////////////////////////////
     // Deklaracje zmiennych globalnych
     ////////////////////////////////////////////////////////////////
 
-    WINDOWPARAMS WindowParams;
-
-    int32_t WindowWidth;
-    int32_t WindowHeight;
-
     std::thread PhilosopherThread[PHILOSOPHERS_COUNT];
+    Semaphore AccessControl[1 + PHILOSOPHERS_COUNT];
 
-    uint8_t PhilosopherState[PHILOSOPHERS_COUNT];
-    uint8_t ForkState[PHILOSOPHERS_COUNT];
-    uint8_t TableRoom;
+    VisualState PhilosopherState[PHILOSOPHERS_COUNT];
+    VisualState ForkState[PHILOSOPHERS_COUNT];
 
 
     ////////////////////////////////////////////////////////////////
@@ -40,18 +113,7 @@ namespace Lab08
     {
         int32_t id;
 
-        /********************************/
-
         std::srand(std::time(NULL));
-
-        /********************************/
-
-        WindowParams.y     = 0.5 * SCREEN_HEIGHT;
-        WindowParams.x     = WindowParams.y;
-        WindowParams.ratio = SCREEN_WIDTH / SCREEN_HEIGHT;
-
-        WindowWidth  = DEFAULT_WINDOW_WIDTH;
-        WindowHeight = DEFAULT_WINDOW_HEIGHT;
 
         /********************************/
 
@@ -67,11 +129,7 @@ namespace Lab08
 
         /********************************/
 
-        std::memset(PhilosopherState, PHILOSOPHER_STATE_ABSENT, sizeof(uint8_t) * PHILOSOPHERS_COUNT);
-
-        std::memset(ForkState, FORK_STATE_AVAILABLE, sizeof(uint8_t) * PHILOSOPHERS_COUNT);
-
-        TableRoom = PHILOSOPHERS_COUNT - 1;
+        AccessControl[PHILOSOPHERS_COUNT](PHILOSOPHERS_COUNT - 1);
 
         /********************************/
 
@@ -79,7 +137,7 @@ namespace Lab08
         {
             for (id = 0; id < PHILOSOPHERS_COUNT; id++)
             {
-                PhilosopherThread[id] = std::thread(philosopherThread, id);
+                PhilosopherThread[id] = std::thread(philosopherLogic, id);
             }
         }
         catch (std::runtime_error)
@@ -110,7 +168,13 @@ namespace Lab08
     ////////////////////////////////////////////////////////////////
     void philosopherWait(int32_t ms_min, int32_t ms_max)
     {
-        const int32_t ms = (std::rand() % (ms_max - ms_min + 1)) + ms_min;
+        const int32_t x = 100;
+
+        const int32_t ms = x *
+        (
+            std::rand() % ((ms_max - ms_min + 1) / x)
+            + (ms_min / x)
+        );
 
         std::this_thread::sleep_for(std::chrono::milliseconds(ms));
     }
@@ -119,7 +183,7 @@ namespace Lab08
     ////////////////////////////////////////////////////////////////
     // W¹tek jednego z kilku filozofów
     ////////////////////////////////////////////////////////////////
-    static void philosopherThread(int32_t id)
+    void philosopherLogic(int32_t id)
     {
         const int32_t left_fork  = id;
         const int32_t right_fork = (id + 1) % PHILOSOPHERS_COUNT;
@@ -128,29 +192,42 @@ namespace Lab08
 
         while (1)
         {
-            if (TableRoom > 0)
-            {
-                TableRoom--;
+            AccessControl[PHILOSOPHERS_COUNT].wait();
 
-                PhilosopherState[id] = PHILOSOPHER_STATE_THINKING;
-                philosopherWait(100, 2000);
+            /* Filozof usiad³ przy stole i chwilkê rozmyœla */
 
-                while (FORK_STATE_AVAILABLE != ForkState[left_fork]);
-                ForkState[left_fork] = FORK_STATE_TAKEN_AS_LEFT;
+            PhilosopherState[id](PHILOSOPHER_STATE_THINKING);
+            philosopherWait(100, 2000);
 
-                while (FORK_STATE_AVAILABLE != ForkState[right_fork]);
-                ForkState[right_fork] = FORK_STATE_TAKEN_AS_RIGHT;
+            /* Filozof próbuj podnieœæ dwa widelce */
 
-                PhilosopherState[id] = PHILOSOPHER_STATE_EATING;
-                philosopherWait(1000, 3000);
+            AccessControl[left_fork].wait
+            (
+                left_fork,
+                FORK_STATE_TAKEN_AS_LEFT
+            );
 
-                ForkState[left_fork]  = FORK_STATE_AVAILABLE;
-                ForkState[right_fork] = FORK_STATE_AVAILABLE;
+            AccessControl[right_fork].wait
+            (
+                right_fork,
+                FORK_STATE_TAKEN_AS_RIGHT
+            );
 
-                TableRoom++;
-            }
+            /* Delikwent udaje, ¿e wcina coœ smacznego */
 
-            PhilosopherState[id] = PHILOSOPHER_STATE_ABSENT;
+            PhilosopherState[id](PHILOSOPHER_STATE_EATING);
+            philosopherWait(1000, 3000);
+
+            /* Filozof odk³ada widelce */
+
+            AccessControl[left_fork].signal(left_fork);
+            AccessControl[right_fork].signal(right_fork);
+
+            /* Delikwent odchodzi od sto³u i udaje, ¿e nie jest na razie g³odny */
+
+            AccessControl[PHILOSOPHERS_COUNT].signal();
+
+            PhilosopherState[id](PHILOSOPHER_STATE_ABSENT);
             philosopherWait(100, 2000);
         }
     }

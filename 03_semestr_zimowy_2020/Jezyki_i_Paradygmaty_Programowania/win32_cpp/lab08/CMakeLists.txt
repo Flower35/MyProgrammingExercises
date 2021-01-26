@@ -68,6 +68,6 @@ target_link_libraries (
 
     Lab08
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/GLFW/libglfw3.a
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/GLFW/libglfw3dll.a
     ${OPENGL_LIBRARIES}
 )

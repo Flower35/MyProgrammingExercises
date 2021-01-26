@@ -10,8 +10,10 @@
 #include <ctime>
 
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
-//// #define  GLFW_DLL
+#define  GLFW_DLL
 #include <GLFW/glfw3.h>
 
 namespace Lab08
@@ -24,22 +26,27 @@ namespace Lab08
     #define SCREEN_WIDTH   640
     #define SCREEN_HEIGHT  480
 
-    #define DEFAULT_WINDOW_WIDTH   640
-    #define DEFAULT_WINDOW_HEIGHT  480
+    #define DEFAULT_WINDOW_WIDTH   SCREEN_WIDTH
+    #define DEFAULT_WINDOW_HEIGHT  SCREEN_HEIGHT
 
     #define WINDOW_NAME  "Lab08: Philosophers"
 
 
-    struct WINDOWPARAMS
+    ////////////////////////////////////////////////////////////////
+    // Struktury pomocnicze
+    ////////////////////////////////////////////////////////////////
+
+    struct Point2f
     {
         public:
-            double x;
-            double y;
-            double ratio;
+
+            float x;
+            float y;
+
+            Point2f(float _x, float _y);
     };
 
-
-    struct COLOR3F
+    struct Color3f
     {
         public:
 
@@ -47,12 +54,63 @@ namespace Lab08
             float green;
             float blue;
 
-            COLOR3F(float _r, float _g, float _b);
+            Color3f(float _r, float _g, float _b);
     };
 
 
     ////////////////////////////////////////////////////////////////
-    // Rozwi¹zywanie problemu g³odnych filozofów
+    // Klasa semafora zliczaj¹cego
+    ////////////////////////////////////////////////////////////////
+
+    class Semaphore
+    {
+        private:
+
+            size_t counter;
+            std::mutex mtx;
+            std::condition_variable convar;
+
+            void operator () (size_t new_counter);
+
+        public:
+
+            Semaphore(size_t starting_value = 1);
+            Semaphore(const Semaphore & other);
+
+            void wait(int32_t opt_fork_id = (-1), int32_t new_state = 0);
+            void signal(int32_t opt_fork_id = (-1));
+
+        /* Semafor kamerdynera ma inn¹ wartoœæ pocz¹tkow¹! */
+        friend bool prepareTheApplication();
+    };
+
+
+    ////////////////////////////////////////////////////////////////
+    // Klasa stanu obiektu wizualnego
+    ////////////////////////////////////////////////////////////////
+
+    class VisualState
+    {
+        private:
+
+            uint8_t state;
+
+            void operator () (uint8_t new_state);
+
+        public:
+
+            VisualState();
+
+            uint8_t operator () (void) const;
+
+        /* Tylko filozofowie mog¹ bezpoœrednio zmieniaæ stan wizualny! */
+        friend class Semaphore;
+        friend void philosopherLogic(int32_t id);
+    };
+
+
+    ////////////////////////////////////////////////////////////////
+    // Rozwi¹zywanie problemu ucztuj¹cych filozofów
     ////////////////////////////////////////////////////////////////
 
     #define PHILOSOPHERS_COUNT  5
@@ -70,16 +128,11 @@ namespace Lab08
     // Zmienne globalne
     ////////////////////////////////////////////////////////////////
 
-    extern WINDOWPARAMS WindowParams;
-
-    extern int32_t WindowWidth;
-    extern int32_t WindowHeight;
-
     extern std::thread PhilosopherThread[PHILOSOPHERS_COUNT];
+    extern Semaphore AccessControl[1 + PHILOSOPHERS_COUNT];
 
-    extern uint8_t PhilosopherState[PHILOSOPHERS_COUNT];
-    extern uint8_t ForkState[PHILOSOPHERS_COUNT];
-    extern uint8_t TableRoom;
+    extern VisualState PhilosopherState[PHILOSOPHERS_COUNT];
+    extern VisualState ForkState[PHILOSOPHERS_COUNT];
 
 
     ////////////////////////////////////////////////////////////////
@@ -90,8 +143,7 @@ namespace Lab08
     void endTheApplication();
 
     void philosopherWait(int32_t ms_min, int32_t ms_max);
-
-    static void philosopherThread(int32_t id);
+    void philosopherLogic(int32_t id);
 
 
     ////////////////////////////////////////////////////////////////
@@ -100,11 +152,11 @@ namespace Lab08
 
     void doTheDrawing(GLFWwindow * window);
 
-    void drawCircle(const COLOR3F & color, float outer_radius, float inner_radius, float z_order);
+    void drawCircle(const Color3f & color, float outer_radius, float inner_radius, float z_order);
     void drawPlate(int32_t which);
     void drawFork(int32_t which);
 
-    void setOrthoView(int width, int height);
+    void setOrthoView(double half_width, double half_height);
     void windowResizeCallback(GLFWwindow * window, int width, int height);
 
 }
